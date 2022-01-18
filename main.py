@@ -154,7 +154,7 @@ class TokenOperations:
             return id
 
     @staticmethod
-    def write_token(t: TokenTables, k):
+    def write_token_to_file(t: TokenTables, k):
         with open("token_file.txt", 'a') as file:
             data = f"({t.value}, {k})"
             file.write(data)
@@ -182,7 +182,7 @@ class states(Enum):
 class Lex:
     
     bufer = [] #Буфер на 80 элементов
-    buf_top = 80
+    buf_top = 0
 
 
     lex_type = token_exprs.values()
@@ -195,12 +195,13 @@ class Lex:
         self.int_value = value
 
     def clear(self):
-        buf_top = 0
+        self.buf_top = 0
         for i in range(80):
             self.bufer[i] = '\0'
 
     def add(self, char):
-        self.bufer[buf_top++] = self.char
+        self.buf_top += 1
+        self.bufer.append(self.char)
 
 
 class Identificator:
