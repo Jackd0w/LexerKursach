@@ -1,6 +1,5 @@
 '''Вариант  222222'''
 
-from asyncio.base_events import _ExceptionHandler
 from multiprocessing.sharedctypes import Value
 from operator import index
 import sys

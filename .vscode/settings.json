@@ -26,5 +26,8 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
+  ],
+  "python.analysis.extraPaths": [
+    "./src"
   ]
 }
