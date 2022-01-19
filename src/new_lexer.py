@@ -47,9 +47,9 @@ class Lexer(object):
         switcher = {
             "+": Token.PLUS,    "-": Token.MINUS,  "/": Token.DIVIDE,  "*": Token.TIMES,
             "%": Token.MODULUS, "^": Token.POWER,  "=": Token.ASSIGN,  "!": Token.NOT,
-            "|": Token.OR,      "&": Token.AND,    ",": Token.COMMA,   ";": Token.SEMICOLON,  
-            "(": Token.LPAREN,  ")": Token.RPAREN, "{": Token.LBRACE,  "}": Token.RBRACE,     
-            "[": Token.LSQUARE, "]": Token.RSQUARE, "<": Token.SMALL,  ">": Token.LARGE,   
+            ",": Token.COMMA,   ";": Token.SEMICOLON,  "(": Token.LPAREN,  ")": Token.RPAREN,
+            "{": Token.LBRACE,  "}": Token.RBRACE, "[": Token.LSQUARE, "]": Token.RSQUARE,
+            "<": Token.SMALL,  ">": Token.LARGE,   
             
         }
         if tok := switcher.get(self.ch, None): 
@@ -61,6 +61,8 @@ class Lexer(object):
                 "<=": Token.SMALLEQ,
                 "==": Token.EQUAL,
                 "!=": Token.NOTEQ,
+                "&&": Token.AND, 
+                "||": Token.OR,     
             }
             # checking for double charectors like '>', '<=', '!=' 
             if new_tok := double_switcher.get(ch+self.ch, None):
@@ -94,11 +96,11 @@ class Lexer(object):
         # checking for float and integer
         if is_digit(self.ch):
             pos = self.pos 
-            ttype = Token.INT.name
+            ttype = Token.INTEGER.name
             while is_digit(self.ch): 
                 self.read_char()
                 if self.ch == ".":
-                    ttype = Token.FLOAT.name
+                    ttype = Token.REAL.name
                     continue
             data: str = self.input[pos-1: self.pos - 1] 
             return TokenInfo(ttype , data) 
@@ -110,26 +112,26 @@ class Lexer(object):
     
 
 def is_letter(char: str) -> bool:
-    "Checking if given self.ch is letter"
+    #"Checking if given self.ch is letter"
     return  ("a" <= char <="z")   \
             | ("A" <= char <="Z") \
             | ('_' == char )
 
 
 def is_whitespace(char: str) -> bool:
-    "Checking if the given input is whitespace."
+    #"Checking if the given input is whitespace."
     return  (char == " ")     \
             | (char == "\t") \
             | (char == "\n") \
             | (char == "\r") 
 
 def is_digit(char: str) -> bool:
-    "Checking if the given input is digit"
+    #"Checking if the given input is digit"
     return ("0" <=  char <= "9") \
             | (char == ".")
     
 if __name__ == "__main__":
-    data: str = """
+    '''data: str = """
         let square = func(n) {
             return n * 2;
         };
@@ -137,6 +139,9 @@ if __name__ == "__main__":
         let out = square(data);
         print(out);
     """
+    '''
+
+    data : str = """boolean a = (0 && 1)"""
 
     for i in Lexer(data):
         print(1, i)
