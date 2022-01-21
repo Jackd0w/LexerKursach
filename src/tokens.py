@@ -1,6 +1,13 @@
 from collections import namedtuple
 from enum import Enum
 
+class TypesOfTokenTables(Enum):
+    KEYWORDS = 0
+    SEPARATORS = 1
+    IDS = 2
+    NUMBERS = 3
+
+
 class NewEnum(Enum):
     """ I want enum class to automatically compare name 
     between two Enum or comparing string to the Enum. 
@@ -18,7 +25,7 @@ class NewEnum(Enum):
     def __hash__(self):
         return id(self.name)
 
-TokenInfo = namedtuple('TokenInfo', ["name", "value"])
+TokenInfo = namedtuple('TokenInfo', ["name", "value", "num of table", "num"])
 
 EOF = "EOF"
 ILLEGAL = "ILLEGAL"
@@ -106,8 +113,31 @@ keywords = {
     "writeln" : Token.WRITELN.name,
     "integer" : Token.INTEGER.name,
     "real" : Token.REAL.name,
-    "boolean" : Token.BOOLEAN.name
+    "boolean" : Token.BOOLEAN.name 
 }
+
+separators = {
+    "+": Token.PLUS,
+    "-": Token.MINUS,
+    "/": Token.DIVIDE,
+    "*": Token.TIMES,
+    "=": Token.ASSIGN,
+    "!": Token.NOT,
+    ",": Token.COMMA,
+    ";": Token.SEMICOLON,
+    "(": Token.LPAREN,
+    ")": Token.RPAREN,
+    "{": Token.LBRACE,
+    "}": Token.RBRACE,
+    "[": Token.LSQUARE,
+    "]": Token.RSQUARE,
+    "<": Token.SMALL,  
+    ">": Token.LARGE,
+}
+
+
+def get_num(data: str) -> TypesOfTokenTables:
+    return 
 
 def get_token(data: str) -> Token:
     # checks if the given string is keyword or not
