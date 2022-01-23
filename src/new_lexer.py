@@ -9,7 +9,7 @@ def Lexer(data: str) -> TokenInfo:
             if match := tokenId.value.match(data, pos):
                 pos = match.end(0)
                 if tokenId == Token.WHITESPACE or tokenId == Token.COMMENT:
-                    # ignore white spaces or comments 
+                    # Игнорируем комменты и пробелы
                     break
                 yield TokenInfo(tokenId.name, match.group(0))
                 break

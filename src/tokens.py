@@ -1,11 +1,9 @@
-from collections import namedtuple
 from enum import Enum
+import re
+from collections import namedtuple
 
-class TypesOfTokenTables(Enum):
-    KEYWORDS = 0
-    SEPARATORS = 1
-    IDS = 2
-    NUMBERS = 3
+
+TokenInfo = namedtuple("Tokens", ["name", "value"])
 
 
 class NewEnum(Enum):
@@ -17,7 +15,6 @@ class NewEnum(Enum):
     def __eq__(self, b) -> bool:
         """ When I do == between the Enum I want to check the name"""
         if isinstance(b, str):
-            print(2)
             return self.name == b 
         else:
             return  self.name == b.name
@@ -25,122 +22,95 @@ class NewEnum(Enum):
     def __hash__(self):
         return id(self.name)
 
-TokenInfo = namedtuple('TokenInfo', ["name", "value", "num of table", "num"])
 
-EOF = "EOF"
-ILLEGAL = "ILLEGAL"
 
-Token = NewEnum("Token", [
-    "ASSIGN",    # "="
-##############
-# Arthemetic operators 
-##############
-    "PLUS",      # "+"
-    "MINUS",     # "-"
-    "DIVIDE",    # "/"
-    "TIMES",     # "*"
-    "MODULUS",   # "%"  Не нужен
-    "POWER",     # "^"  Нк нужен
-##############
-# Logical operators LOOK HERE
-#############
-    "AND",       # "&" !!!!!!!  "&&"
-    "OR",        # "|" !!!!!!! " ||" 
-    "NOT",       # "!"
-##############
-# Comparisions   lEAVE AS IT BE
-##############
-    "EQUAL",     # "=="
-    "NOTEQ",     # "!="
-    "SMALL",     # "<"
-    "LARGE",     # ">"
-    "SMALLEQ",   # "<="
-    "LARGEEQ",   # ">="
-##############
-# Brackets
-##############
-    "COMMA",     # ","
-    "SEMICOLON", # ";"
-    "LPAREN",    # "("
-    "RPAREN",    # ")"
-    "LBRACE",    # "{"
-    "RBRACE",    # "}"
-    "LSQUARE",   # "["
-    "RSQUARE",   # "]"
-##############
-# EXTRA
-##############
-    "ID",        #  Variables
-##############
-# Datatypes
-##############  
-    "INTEGER",       
-    "REAL",
-    "BOOLEAN",     
-    "TRUE",      
-    "FALSE",     
-##############
-# Keywords
-##############
-    "BEGIN",  
-    "END",
-    "FOR",
-    "TO",
-    "NEXT",
-    "WHILE",
-    "DIM",
-    "READLN",       
-    "IF",        
-    "ELSE",      
-    "RETURN",    
-    "WRITELN"
+ILLEGAL = 'ILLEGAL'
+EOF     = 'EOF'
+
+
+
+#Все нелбходимые токены, реализованные с помощью регулярных выражений
+class Token(NewEnum):
+    # data types
+    STRING  = re.compile(r'(\".*\")|(\'.*\')')
+    FLOAT   = re.compile(r'\d+\.\d+')
+    INT     = re.compile(r'\d+')
+    # brackets
+    LPAREN  = re.compile(r'\(')
+    RPAREN  = re.compile(r'\)')
+    LBRACE  = re.compile(r'\{')
+    RBRACE  = re.compile(r'\}')
+    LSQUARE = re.compile(r'\[')
+    RSQUARE = re.compile(r'\]')
+    # oeprators
+    ASSIGN  = re.compile(r':=')
+    # арифметические операторы
+    PLUS    = re.compile(r'\+')
+    MINUS   = re.compile(r'\-')
+    TIMES   = re.compile(r'\*')
+    DIVIDE  = re.compile(r'/')
+    #MODULUS = re.compile(r'%')
+    #POWER   = re.compile(r'\^')
+    # Логические операторы
+    AND     = re.compile(r'&&')
+    OR      = re.compile(r'\|\|')
+    NOT     = re.compile(r'!')
+    # операции группы отношения
+    EQUAL   = re.compile(r'\=\=')
+    SMALL   = re.compile(r'<')
+    SMALLEQ = re.compile(r'<\=')
+    LARGE   = re.compile(r'>')
+    LARGEEQ = re.compile(r'>\=')
+    NOTEQ   = re.compile(r'!\=')
+    # ключевые слова
+    IF      = re.compile(r'if')
+    WHILE   = re.compile(r'while')
+    TRUE    = re.compile(r'true')
+    FALSE   = re.compile(r'false')
+    BEGIN   = re.compile(r'begin')
+    END     = re.compile(r'end')
+    FOR     = re.compile(r'for')
+    TO      = re.compile(r'to')
+    NEXT    = re.compile(r'next')
+    ELSE    = re.compile(r'else')
+    NAN     = re.compile(r'nan')
+    DIM     = re.compile(r'dim')
+    READLN  = re.compile(r'readln')
+    WRITELN   = re.compile(r'writeln')
+
+    # variables
+    ID      = re.compile(r'[_a-zA-Z][_a-zA-Z0-9]*')
+    # comments
+    COMMENT = re.compile(r'\*\/.*\/\*')
+    # delimier 
+    COMMA   = re.compile(r',')
+    SEMICOLON  = re.compile(r';')
+    WHITESPACE = re.compile(r'(\t|\n|\s|\r)+')
+
+#Реализация приоритетов операций через перечисление
+Priority = NewEnum("priority", [
+    "LOWEST",
+    "LOWER",
+    "LOW",
+    "HIGH",
+    "HIGHER",
+    "HIGHEST",
 ])
 
-keywords = {
-    "begin"  : Token.BEGIN.name,
-    "end"   : Token.END.name,
-    "for"   : Token.FOR.name,
-    "to"    : Token.TO.name,
-    "next"  : Token.NEXT.name,
-    "while" : Token.WHILE.name,
-    "dim"   : Token.DIM.name,
-    "readln": Token.READLN.name,
-    "if"    : Token.IF.name,
-    "else"  : Token.ELSE.name,
-    "true"  : Token.TRUE.name,
-    "false" : Token.FALSE.name,
-    "return": Token.RETURN.name,
-    "writeln" : Token.WRITELN.name,
-    "integer" : Token.INTEGER.name,
-    "real" : Token.REAL.name,
-    "boolean" : Token.BOOLEAN.name 
-}
-
-separators = {
-    "+": Token.PLUS,
-    "-": Token.MINUS,
-    "/": Token.DIVIDE,
-    "*": Token.TIMES,
-    "=": Token.ASSIGN,
-    "!": Token.NOT,
-    ",": Token.COMMA,
-    ";": Token.SEMICOLON,
-    "(": Token.LPAREN,
-    ")": Token.RPAREN,
-    "{": Token.LBRACE,
-    "}": Token.RBRACE,
-    "[": Token.LSQUARE,
-    "]": Token.RSQUARE,
-    "<": Token.SMALL,  
-    ">": Token.LARGE,
+# Токены приоритетов
+precedence =  {
+    Token.EQUAL.name : Priority.LOWER,       # ==
+    Token.NOTEQ.name : Priority.LOWER,       # !=
+    Token.SMALL.name : Priority.LOW,         # <  
+    Token.LARGE.name : Priority.LOW,         # >
+    Token.PLUS.name  : Priority.HIGH,        # +
+    Token.MINUS.name : Priority.HIGH,        # -
+    Token.TIMES.name : Priority.HIGHER,      # *
+    Token.DIVIDE.name: Priority.HIGHER,      # /
+    Token.LPAREN.name: Priority.HIGHEST,     # ()  
 }
 
 
-def get_num(data: str) -> TypesOfTokenTables:
-    return 
-
-def get_token(data: str) -> Token:
-    # checks if the given string is keyword or not
-    # if its a keyword return the respective Token
-    # or by default return Token.Id 
-    return keywords.get(data, Token.ID.name)
+#Функция для вычисления приоритета токена. По умолчанию возвращает наименьший
+def get_precedence(token: Token) -> Priority:
+    return precedence.get(token.name, Priority.LOWEST)
