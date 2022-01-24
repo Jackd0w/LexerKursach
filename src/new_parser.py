@@ -19,6 +19,7 @@ class Parser:
         
     def is_next(self, t):
         if self.next_token != t:
+            print(f"expected {t} but got {self.next_token.name}")
             raise AssertionError(f"expected {t} but got {self.next_token.name}")
         self.update()     
 
@@ -36,7 +37,8 @@ class Parser:
     
     #
     def parse_statement(self) -> Statement:
-        if self.curr_token == ILLEGAL:      
+        if self.curr_token == ILLEGAL:
+            print(f"invalid input: {self.curr_token.value}")      
             raise SyntaxError(f"invalid input: {self.curr_token.value}")
 
         return self.parse_dim_statement() or \
@@ -60,7 +62,7 @@ class Parser:
             self.is_next(Token.RPAREN)
             self.is_next(Token.SEMICOLON) 
             self.update()
-            return PrintStatement(state, value)
+            return WriteStatement(state, value)
 
     def parse_dim_statement(self) -> Statement: 
         if self.curr_token == Token.DIM:
@@ -90,6 +92,7 @@ class Parser:
                     self.parse_group() 
 
         if expression ==  None:
+            print(f"operand '{self.curr_token.value}' not defined")
             raise SyntaxError(f"operand '{self.curr_token.value}' not defined")
             
 
@@ -104,13 +107,13 @@ class Parser:
 
     def parse_infix_expression(self, left: Expression) -> Expression:
         infix_list = [
-            # athemetic oeprator
+            # Арифметически операторы
             Token.PLUS,   Token.MINUS,   Token.DIVIDE,  
             Token.TIMES,   
-            # comparision operator
+            # Операторы сравнения
             Token.EQUAL,  Token.LARGE,   Token.LARGEEQ,
             Token.SMALL,  Token.SMALLEQ, Token.NOTEQ ,
-            # logical operator 
+            # Логические операторы 
             Token.AND,      Token.OR
         ]
         if self.next_token.name in infix_list:

@@ -7,13 +7,10 @@ TokenInfo = namedtuple("Tokens", ["name", "value"])
 
 
 class NewEnum(Enum):
-    """ I want enum class to automatically compare name 
-    between two Enum or comparing string to the Enum. 
-    But once __eq__ is defined in an object it requres 
-    __hash__(self) to be implemented to make the Enum 
-    usuable as items in hash collections. """   
+    """Изначально планировалось, чтобы класс автоматически проверял имена двух лексем.
+    Но как только метод __eq__ был объявлен, его необходимо захешировать с помощью метода __hash__.
+    Тогда эти элементы можно будет ичпользовать в хэш коллекции """
     def __eq__(self, b) -> bool:
-        """ When I do == between the Enum I want to check the name"""
         if isinstance(b, str):
             return self.name == b 
         else:
@@ -31,26 +28,25 @@ EOF     = 'EOF'
 
 #Все нелбходимые токены, реализованные с помощью регулярных выражений
 class Token(NewEnum):
-    # data types
+    # типы данных
     STRING  = re.compile(r'(\".*\")|(\'.*\')')
     FLOAT   = re.compile(r'\d+\.\d+')
     INT     = re.compile(r'\d+')
-    # brackets
+    # скобки
     LPAREN  = re.compile(r'\(')
     RPAREN  = re.compile(r'\)')
     LBRACE  = re.compile(r'\{')
     RBRACE  = re.compile(r'\}')
     LSQUARE = re.compile(r'\[')
     RSQUARE = re.compile(r'\]')
-    # oeprators
+    # операторф
     ASSIGN  = re.compile(r':=')
     # арифметические операторы
     PLUS    = re.compile(r'\+')
     MINUS   = re.compile(r'\-')
     TIMES   = re.compile(r'\*')
     DIVIDE  = re.compile(r'/')
-    #MODULUS = re.compile(r'%')
-    #POWER   = re.compile(r'\^')
+    
     # Логические операторы
     AND     = re.compile(r'&&')
     OR      = re.compile(r'\|\|')
@@ -73,16 +69,17 @@ class Token(NewEnum):
     TO      = re.compile(r'to')
     NEXT    = re.compile(r'next')
     ELSE    = re.compile(r'else')
+    STEP    = re.compile(r'step')
     NAN     = re.compile(r'nan')
     DIM     = re.compile(r'dim')
     READLN  = re.compile(r'readln')
-    WRITELN   = re.compile(r'writeln')
+    WRITELN = re.compile(r'writeln')
 
-    # variables
+    #переменные
     ID      = re.compile(r'[_a-zA-Z][_a-zA-Z0-9]*')
-    # comments
+    # комментарии
     COMMENT = re.compile(r'\*\/.*\/\*')
-    # delimier 
+    # разделители
     COMMA   = re.compile(r',')
     SEMICOLON  = re.compile(r';')
     WHITESPACE = re.compile(r'(\t|\n|\s|\r)+')

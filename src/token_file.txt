@@ -1,3 +1,9 @@
 
-dim a := 3;
-writeln(a);
+dim a := 1;
+dim n := 0;
+if (n == 0)
+    begin
+        a ++;
+        writeln(n);
+    end
+else (writeln(a))

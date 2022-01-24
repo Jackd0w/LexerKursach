@@ -21,9 +21,9 @@ def repl():
         try:
             data: str = input(f"[{i}]: ")
             interpretor(data)
-        except EOFError:           # handling ctrl + D
+        except EOFError:           
             print("EOF Error")
-        except KeyboardInterrupt:  # handling ctrl + C 
+        except KeyboardInterrupt:  
             print("Keyboard Interruption")
             break
         except Exception as msg:
@@ -34,7 +34,6 @@ def repl():
 
 if __name__ == "__main__":
 
-
     file_name = "src/token_file.txt"
     if not exists(file_name):
         print(f"{file_name} not found")
@@ -42,3 +41,5 @@ if __name__ == "__main__":
     with open(file_name) as f:
         data = f.read()
         interpretor(data) 
+        print("Ok")
+    

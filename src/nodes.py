@@ -38,8 +38,7 @@ class Literal(Expression):
         return self.type.lower()
 
     def type_casting(self):
-        # conversion will be done here for the value to 
-        # actual value
+        #Здесь происходит конверсия в типы значений
         if self.type == Token.INT:
             return int(self.value)
         elif self.type == Token.FLOAT:
@@ -71,6 +70,7 @@ class DimStatement(Statement):
 
     def eval(self):
         if self.name in storage:
+            print(f'"{self.name}" already defined')
             raise NameError(f'"{self.name}" already defined')
         storage[self.name] = self.expr.eval()
 
@@ -85,6 +85,7 @@ class AssignStatement(Statement):
 
     def eval(self):
         if self.name not in storage:
+            print(f'"{self.name}" not defined')
             raise NameError(f'"{self.name}" not defined')
         storage[self.name] = self.expr.eval()
 
@@ -124,7 +125,7 @@ class ForStatement(Statement):
         self.stmt = stmt
     
     def __repr__(self) -> str:
-        return f"(for ({self.condition}) ({self.stmt}))"
+        return f"(for (set {self.name} {self.expr}) to ({self.condition}) step ({self.condition}) next ({self.condition}))"
 
     def eval(self):
         while self.condition.eval():
@@ -178,7 +179,7 @@ class PrefixExpression(Expression):
             raise TypeError(f"can't perform {self.operator} between {self.left_type()} and  {self.left_type()}")
  
 
-class PrintStatement(Statement):
+class WriteStatement(Statement):
     def __init__(self, state, value: Expression):
         self.state = state
         self.value = value

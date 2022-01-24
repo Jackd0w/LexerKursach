@@ -14,12 +14,9 @@ def Lexer(data: str) -> TokenInfo:
                 yield TokenInfo(tokenId.name, match.group(0))
                 break
         else:
-            # in case pattern doesn't match send the charector as illegal
+            # если паттерн не совпадает, выдаем ошибку
             yield TokenInfo(ILLEGAL, data[pos])
             pos += 1
     else:
-        # in parser we read the token two times each iteration
-        # once for current token and one for next token
-        # so handing it by sending EOF 2 times
         yield TokenInfo(EOF, '\x00') 
         yield TokenInfo(EOF, '\x00') 
